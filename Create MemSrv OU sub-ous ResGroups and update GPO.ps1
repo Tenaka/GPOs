@@ -1,5 +1,5 @@
 ﻿
-#Member Server OU's
+#Member Server OU's - Requires a OU named "Test Member Server" 
 $MemSrvRoot = "Test Member Server"
 $ResGroupRoot = "Test Restricted Groups"
 
