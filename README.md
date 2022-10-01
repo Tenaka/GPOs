@@ -4,7 +4,7 @@
 Does just that - takes seperate GPO's that have been exported to the file system and merges the settings, then re-imports back into GPO Managment (SysVol) 
 
 
-2. Create MemSrv sub-ous Restricted Groups and update GPOs with 
+2. Create MemSrv GPO - AD Groups - Restricted Group - Updates GPO's 
 This is only draft and requires testing, better explanation to come.....
 
 Creates a series of GPO's based on Server services eg SCOM or Exhange Sub-OU's
