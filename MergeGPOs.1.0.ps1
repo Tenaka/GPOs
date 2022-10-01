@@ -41,7 +41,11 @@ else
             Copy -Path $fullname -Destination "C:\Windows\System32\GroupPolicy\Machine\Microsoft\Windows NT\Audit\" -Force
         }
 
-        if ($fileExt -eq ".pol"){& $lgpoExe /m $fullname}
+        if ($fileExt -eq ".pol")
+        {
+            & $lgpoExe /m $fullname
+            & $lgpoExe /u $fullname
+        }
 
         if ($fileExt -eq ".inf"){& $lgpoExe /s $fullname}
  
