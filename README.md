@@ -3,9 +3,7 @@
 1. Merge GPO
 Does just that - takes seperate GPO's that have been exported to the file system and merges the settings, then re-imports back into GPO Managment (SysVol) 
 
-.
-.
-.
+
 2. Create MemSrv sub-ous Restricted Groups and update GPOs with 
 This is only draft and requires testing, better explanation to come.....
 
