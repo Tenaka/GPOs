@@ -23,13 +23,13 @@ if ($getMSRoot -eq $null)
 {
     $rootDSE = (Get-ADRootDSE).rootDomainNamingContext
 
-    New-ADOrganizationalUnit -Name $resRoot -ProtectedFromAccidentalDeletion $false
-    New-ADOrganizationalUnit -name $memSrvRoot -Path $resourceOU -ProtectedFromAccidentalDeletion $false
-    New-ADOrganizationalUnit -name $ResGroupRoot -Path $resourceOU -ProtectedFromAccidentalDeletion $false
+    New-ADOrganizationalUnit -Name $resRoot #-ProtectedFromAccidentalDeletion $false
+    New-ADOrganizationalUnit -name $memSrvRoot #-Path $resourceOU -ProtectedFromAccidentalDeletion $false
+    New-ADOrganizationalUnit -name $ResGroupRoot #-Path $resourceOU -ProtectedFromAccidentalDeletion $false
 
         Foreach ($svc in $srvService )
         {
-           New-ADOrganizationalUnit -name $svc -Path $memSrvOU -ProtectedFromAccidentalDeletion $false
+           New-ADOrganizationalUnit -name $svc -Path $memSrvOU #-ProtectedFromAccidentalDeletion $false
         }
 }
 
