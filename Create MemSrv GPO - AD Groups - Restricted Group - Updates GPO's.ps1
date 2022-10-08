@@ -1,4 +1,5 @@
-
+#Path to Sysvol
+$smbSysvol = ((Get-SmbShare -name "sysvol").path).replace("SYSVOL\sysvol","sysvol")
 
 #Root of all Member Server Resources
 $resRoot = "Testing Resources"
@@ -16,18 +17,18 @@ $resourceOU = "OU=$($resRoot),$($rootDSE)"
 $memSrvOU = "OU=$($memSrvRoot),OU=$($resRoot),$($rootDSE)"
 $ResGroupOU = "OU=$($ResGroupRoot),OU=$($resRoot),$($rootDSE)" 
 
+$getMSRoot=@()
 $getMSRoot = Get-ADOrganizationalUnit -filter * | where {$_.DistinguishedName -eq $resourceOU } #| Select-Object -Skip 1
 
-
-if ($getMSRoot -eq $null)
+if ($getMSRoot.DistinguishedName -eq $null)
 {
     $rootDSE = (Get-ADRootDSE).rootDomainNamingContext
 
-    New-ADOrganizationalUnit -Name $resRoot #-ProtectedFromAccidentalDeletion $false
-    New-ADOrganizationalUnit -name $memSrvRoot #-Path $resourceOU -ProtectedFromAccidentalDeletion $false
-    New-ADOrganizationalUnit -name $ResGroupRoot #-Path $resourceOU -ProtectedFromAccidentalDeletion $false
+    New-ADOrganizationalUnit -Name $resRoot -ProtectedFromAccidentalDeletion $false
+    New-ADOrganizationalUnit -name $memSrvRoot -Path $resourceOU -ProtectedFromAccidentalDeletion $false
+    New-ADOrganizationalUnit -name $ResGroupRoot -Path $resourceOU -ProtectedFromAccidentalDeletion $false
 
-        Foreach ($svc in $srvService )
+        Foreach ($svc in $srvService)
         {
            New-ADOrganizationalUnit -name $svc -Path $memSrvOU #-ProtectedFromAccidentalDeletion $false
         }
@@ -68,7 +69,7 @@ $getGPOPath = (Get-GPO $GPOName).path
 
 Set-GPPermission -Guid $getGpoId -PermissionLevel GpoEditDeleteModifySecurity -TargetType Group -TargetName $rgAdminGp
 
-$sysvol = "C:\Windows\SYSVOL\domain\Policies\{$($getGpoId)}\Machine\Microsoft\Windows NT\SecEdit"
+$sysvol = "$($smbSysvol)\domain\Policies\{$($getGpoId)}\Machine\Microsoft\Windows NT\SecEdit"
 
 New-Item -Path $sysvol -ItemType Directory -Force
 New-Item -Path $sysvol -Name GptTmpl.inf -ItemType File -Force
@@ -142,7 +143,7 @@ Set-ADObject -Identity $getGPOPath -Replace @{gPCMachineExtensionNames="[{827D31
 
         Set-GPPermission -Guid $getGpoId -PermissionLevel GpoEditDeleteModifySecurity -TargetType Group -TargetName $rgAdminGp
 
-        $sysvol = "C:\Windows\SYSVOL\domain\Policies\{$($getGpoId)}\Machine\Microsoft\Windows NT\SecEdit"
+        $sysvol = "$($smbSysvol)\domain\Policies\{$($getGpoId)}\Machine\Microsoft\Windows NT\SecEdit"
 
         New-Item -Path $sysvol -ItemType Directory -Force
         New-Item -Path $sysvol -Name GptTmpl.inf -ItemType File -Force
