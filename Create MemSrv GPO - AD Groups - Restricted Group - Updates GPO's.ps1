@@ -1,3 +1,6 @@
+#Root of the domain
+$rootDSE = (Get-ADRootDSE).rootDomainNamingContext
+
 #Path to Sysvol
 $smbSysvol = ((Get-SmbShare -name "sysvol").path).replace("SYSVOL\sysvol","sysvol")
 
@@ -22,8 +25,6 @@ $getMSRoot = Get-ADOrganizationalUnit -filter * | where {$_.DistinguishedName -e
 
 if ($getMSRoot.DistinguishedName -eq $null)
 {
-    $rootDSE = (Get-ADRootDSE).rootDomainNamingContext
-
     New-ADOrganizationalUnit -Name $resRoot #-ProtectedFromAccidentalDeletion $false
     New-ADOrganizationalUnit -name $memSrvRoot -Path $resourceOU #-ProtectedFromAccidentalDeletion $false
     New-ADOrganizationalUnit -name $ResGroupRoot -Path $resourceOU #-ProtectedFromAccidentalDeletion $false
