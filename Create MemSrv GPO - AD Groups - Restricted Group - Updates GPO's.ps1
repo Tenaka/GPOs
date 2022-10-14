@@ -106,6 +106,21 @@ Add-Content -Path $gptFile -Value $addConURARemote
 #Set GPMC Machine Extensions so Manual Intervention is both displayed in GPO Management and applies to target 
 Set-ADObject -Identity $getGPOPath -Replace @{gPCMachineExtensionNames="[{827D319E-6EAC-11D2-A4EA-00C04F79F83A}{803E14A0-B4FB-11D0-A0D0-00A0C90F574B}]"}
 
+        #Create GPO Versioning
+        #Increadse AD Version of GPO
+        $object = new-object system.directoryservices.directoryentry("LDAP://$getGPOPath")
+        $object.versionnumber = 1
+        $object.setinfo()
+
+        #Modify gpt.ini - Tipp found at https://simplecodesoftware.com/articles/how-to-set-up-group-policy-scripts-programmatically
+        $GPTINI = "$($smbSysvol)\domain\Policies\{$($getGpoId)}\GPT.ini"
+    (
+        "[General]",
+        "gPCMachineExtensionNames=[{827D319E-6EAC-11D2-A4EA-00C04F79F83A}{803E14A0-B4FB-11D0-A0D0-00A0C90F574B}]",
+        "Version=1",
+        "displayName=$GPOName"
+    ) | Out-File -FilePath $GPTINI -Encoding ascii -Force -Confirm:$false 
+
     Foreach ($ouItem in $getOU)
     {
         $ouName = $ouItem.Name
@@ -179,6 +194,20 @@ Set-ADObject -Identity $getGPOPath -Replace @{gPCMachineExtensionNames="[{827D31
 
         #Set GPMC Machine Extensions so Manual Intervention is both displayed in GPO Management and applies to target 
         Set-ADObject -Identity $getGPOPath -Replace @{gPCMachineExtensionNames="[{827D319E-6EAC-11D2-A4EA-00C04F79F83A}{803E14A0-B4FB-11D0-A0D0-00A0C90F574B}]"}
-       
+        
+        #Create GPO Versioning
+        #Increadse AD Version of GPO
+        $object = new-object system.directoryservices.directoryentry("LDAP://$getGPOPath")
+        $object.versionnumber = 1
+        $object.setinfo()
+
+        #Modify gpt.ini - Tipp found at https://simplecodesoftware.com/articles/how-to-set-up-group-policy-scripts-programmatically
+        $GPTINI = "$($smbSysvol)\domain\Policies\{$($getGpoId)}\GPT.ini"
+    (
+        "[General]",
+        "gPCMachineExtensionNames=[{827D319E-6EAC-11D2-A4EA-00C04F79F83A}{803E14A0-B4FB-11D0-A0D0-00A0C90F574B}]",
+        "Version=1",
+        "displayName=$GPOName"
+    ) | Out-File -FilePath $GPTINI -Encoding ascii -Force -Confirm:$false 
     }
     
