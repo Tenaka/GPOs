@@ -5,7 +5,7 @@ Does just that - takes seperate GPO's that have been exported to the file system
 
 
 2. Create MemSrv GPO - AD Groups - Restricted Group - Updates GPO's 
-This is only draft and requires testing, better explanation to come.....
+https://www.tenaka.net/post/how-to-create-gpos-with-restricted-groups-using-powershell
 
 Creates a series of GPO's based on Server services eg SCOM or Exhange Sub-OU's
 Creates Admin and RDP AD Groups for each Server Service for assiging to Restricted Groups
