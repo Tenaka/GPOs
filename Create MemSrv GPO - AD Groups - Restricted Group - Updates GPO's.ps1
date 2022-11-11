@@ -72,6 +72,11 @@ Set-GPPermission -Guid $getGpoId -PermissionLevel GpoEditDeleteModifySecurity -T
 
 $sysvol = "$($smbSysvol)\domain\Policies\{$($getGpoId)}\Machine\Microsoft\Windows NT\SecEdit"
 
+#FabianNiesen supplied fix so GPO is versioned to 1 and not set to 0 (zero)
+$gpt = "$($smbSysvol)\domain\Policies\{$($getGpoId)}\GPT.ini"
+Set-content $gpt -Value "[General]"
+Add-Content $gpt -Value "Version=1" 
+
 New-Item -Path $sysvol -ItemType Directory -Force
 New-Item -Path $sysvol -Name GptTmpl.inf -ItemType File -Force
 
@@ -105,6 +110,8 @@ Add-Content -Path $gptFile -Value $addConURARemote
 
 #Set GPMC Machine Extensions so Manual Intervention is both displayed in GPO Management and applies to target 
 Set-ADObject -Identity $getGPOPath -Replace @{gPCMachineExtensionNames="[{827D319E-6EAC-11D2-A4EA-00C04F79F83A}{803E14A0-B4FB-11D0-A0D0-00A0C90F574B}]"}
+#FabianNiesen supplied fix so GPO is versionedto 1 and not set to 0 (zero)
+Set-ADObject -Identity $getGPOPath -Replace @{versionNumber="1"}
 
     Foreach ($ouItem in $getOU)
     {
@@ -145,6 +152,10 @@ Set-ADObject -Identity $getGPOPath -Replace @{gPCMachineExtensionNames="[{827D31
         Set-GPPermission -Guid $getGpoId -PermissionLevel GpoEditDeleteModifySecurity -TargetType Group -TargetName $rgAdminGp
 
         $sysvol = "$($smbSysvol)\domain\Policies\{$($getGpoId)}\Machine\Microsoft\Windows NT\SecEdit"
+        #FabianNiesen supplied fix so GPO is versioned to 1 and not set to 0 (zero)
+        $gpt = "$($smbSysvol)\domain\Policies\{$($getGpoId)}\GPT.ini"
+        Set-content $gpt -Value "[General]"
+        Add-Content $gpt -Value "Version=1"
 
         New-Item -Path $sysvol -ItemType Directory -Force
         New-Item -Path $sysvol -Name GptTmpl.inf -ItemType File -Force
@@ -179,6 +190,7 @@ Set-ADObject -Identity $getGPOPath -Replace @{gPCMachineExtensionNames="[{827D31
 
         #Set GPMC Machine Extensions so Manual Intervention is both displayed in GPO Management and applies to target 
         Set-ADObject -Identity $getGPOPath -Replace @{gPCMachineExtensionNames="[{827D319E-6EAC-11D2-A4EA-00C04F79F83A}{803E14A0-B4FB-11D0-A0D0-00A0C90F574B}]"}
-       
+        #FabianNiesen supplied fix so GPO is versioned to 1 and not set to 0 (zero)
+        Set-ADObject -Identity $getGPOPath -Replace @{versionNumber="1"}
     }
     
